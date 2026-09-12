@@ -71,6 +71,7 @@ class _HomePageState extends State<HomePage> {
           ),
 
           const SizedBox(height: 8),
+
           const Text(
             'Temukan dan baca artikel menarik hari ini.',
             style: TextStyle(
@@ -81,6 +82,7 @@ class _HomePageState extends State<HomePage> {
           ),
 
           const SizedBox(height: 28),
+
           // Header Recent Articles
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,13 +95,12 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               Text(
                 '${articles.length} artikel',
                 style: const TextStyle(
                   fontFamily: 'Comic Relief',
                   fontSize: 13,
-                  color:  Color.fromARGB(255, 157, 98, 40),
+                  color: Color.fromARGB(255, 157, 98, 40),
                 ),
               ),
             ],
@@ -124,6 +125,9 @@ class _HomePageState extends State<HomePage> {
 
               return ArticleCard(
                 article: article,
+
+                // Beri tahu Home kalau artikel berhasil diubah
+                onArticleUpdated: getPosts,
               );
             },
           ),
@@ -133,13 +137,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
 class ArticleCard extends StatelessWidget {
   final Map article;
+  final VoidCallback? onArticleUpdated;
 
   const ArticleCard({
     super.key,
     required this.article,
+    this.onArticleUpdated,
   });
 
   @override
@@ -149,8 +154,8 @@ class ArticleCard extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ArticleDetailPage(
@@ -158,7 +163,13 @@ class ArticleCard extends StatelessWidget {
             ),
           ),
         );
+
+        // Kalau artikel berhasil diedit
+        if (result == true) {
+          onArticleUpdated?.call();
+        }
       },
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -185,7 +196,11 @@ class ArticleCard extends StatelessWidget {
 
           // TITLE
           Padding(
-            padding: const EdgeInsets.only(left: 10, top: 6, right: 10),
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 6,
+              right: 10,
+            ),
             child: Text(
               title,
               maxLines: 2,
