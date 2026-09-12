@@ -41,17 +41,17 @@ class _MainPageState extends State<MainPage> {
     SalomonBottomBarItem(
       icon: const Icon(Icons.home_outlined),
       title: const Text("Home"),
-      selectedColor: Colors.blue,
+      selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
     SalomonBottomBarItem(
       icon: const Icon(Icons.add),
       title: const Text("Tambah"),
-      selectedColor: Colors.green,
+      selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
     SalomonBottomBarItem(
       icon: const Icon(Icons.category_outlined),
       title: const Text("Category"),
-      selectedColor: Colors.orange,
+      selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
   ];
 
@@ -59,20 +59,53 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Icon(Icons.menu_book_rounded),
-        centerTitle: true,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/BlogId.png',
+              height: 40,
+            ),
+            const Text(
+              'Blog',
+              style: TextStyle(
+                fontFamily: 'Comic Relief',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Id',
+              style: TextStyle(
+                fontFamily: 'Comic Relief',
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
 
       body: _pages[_currentIndex],
 
-      bottomNavigationBar: SalomonBottomBar(
-        currentIndex: _currentIndex,
-        items: _items,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 400,
+              child: SalomonBottomBar(
+                currentIndex: _currentIndex,
+                items: _items,
+                onTap: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

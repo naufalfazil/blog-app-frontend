@@ -1,16 +1,221 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'article_detail_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List articles = [];
+  bool isLoading = true;
+
+  Future<void> getPosts() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost:3000/api/v1/posts'),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          articles = jsonDecode(response.body)['data'];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+
+      debugPrint('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPosts();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Daftar Artikel',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: getPosts,
+      child: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          const SizedBox(height: 10),
+
+          // Greeting
+          const Text(
+            'Hi! Good day!',
+            style: TextStyle(
+              fontFamily: 'Comic Relief',
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          const Text(
+            'Temukan dan baca artikel menarik hari ini.',
+            style: TextStyle(
+              fontFamily: 'Comic Relief',
+              fontSize: 15,
+              color: Color.fromARGB(255, 157, 98, 40),
+            ),
+          ),
+
+          const SizedBox(height: 28),
+          // Header Recent Articles
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Recent Articles',
+                style: TextStyle(
+                  fontFamily: 'Comic Relief',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              Text(
+                '${articles.length} artikel',
+                style: const TextStyle(
+                  fontFamily: 'Comic Relief',
+                  fontSize: 13,
+                  color:  Color.fromARGB(255, 157, 98, 40),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Grid Artikel
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: articles.length,
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 14,
+              mainAxisSpacing: 18,
+              childAspectRatio: 0.72,
+            ),
+            itemBuilder: (context, index) {
+              final article = articles[index];
+
+              return ArticleCard(
+                article: article,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class ArticleCard extends StatelessWidget {
+  final Map article;
+
+  const ArticleCard({
+    super.key,
+    required this.article,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String title = article['title'] ?? 'Tanpa Judul';
+    final dynamic image = article['imageUrl'];
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArticleDetailPage(
+              article: article,
+            ),
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // IMAGE
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: image != null &&
+                      image.toString().isNotEmpty
+                  ? Image.network(
+                      image.toString(),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _imagePlaceholder();
+                      },
+                    )
+                  : _imagePlaceholder(),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // TITLE
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 6, right: 10),
+            child: Text(
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: 'Comic Relief',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                height: 1.3,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _imagePlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.image_outlined,
+          size: 45,
+          color: Colors.grey,
         ),
       ),
     );
