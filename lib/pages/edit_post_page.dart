@@ -179,6 +179,7 @@ class _EditPostPageState extends State<EditPostPage> {
                   : const Text(
                       'Save',
                       style: TextStyle(
+                        fontFamily: 'Comic Relief',
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFFFFFF),
                       ),
@@ -228,17 +229,14 @@ class _EditPostPageState extends State<EditPostPage> {
               child: Text(
                 'Tap gambar untuk mengganti foto',
                 style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
+                  color: Color(0xFFB06D50),
+                  fontSize: 12,
                 ),
               ),
             ),
 
             const SizedBox(height: 28),
 
-            // =========================
-            // TITLE
-            // =========================
             const Text(
               'Title',
               style: TextStyle(
@@ -259,10 +257,10 @@ class _EditPostPageState extends State<EditPostPage> {
               decoration: InputDecoration(
                 hintText: 'Article Title',
                 hintStyle: const TextStyle(
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 90, 90, 90),
                 ),
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Color.fromARGB(255, 237, 230, 230),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
@@ -276,9 +274,6 @@ class _EditPostPageState extends State<EditPostPage> {
 
             const SizedBox(height: 24),
 
-            // =========================
-            // ARTICLE
-            // =========================
             const Text(
               'Article',
               style: TextStyle(
@@ -301,10 +296,10 @@ class _EditPostPageState extends State<EditPostPage> {
               decoration: InputDecoration(
                 hintText: 'Write your article here...',
                 hintStyle: const TextStyle(
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 90, 90, 90),
                 ),
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Color.fromARGB(255, 237, 230, 230),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
@@ -323,12 +318,12 @@ class _EditPostPageState extends State<EditPostPage> {
     return Container(
       width: double.infinity,
       height: 240,
-      color: Colors.grey.shade100,
+      color: Color.fromARGB(255, 237, 230, 230),
       child: const Center(
         child: Icon(
           Icons.image_outlined,
           size: 55,
-          color: Colors.grey,
+          color: Color.fromARGB(255, 90, 90, 90),
         ),
       ),
     );
