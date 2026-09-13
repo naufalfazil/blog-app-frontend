@@ -38,17 +38,17 @@ class _MainPageState extends State<MainPage> {
 
   final _items = [
     SalomonBottomBarItem(
-      icon: const Icon(Icons.home_outlined),
+      icon: const Icon(Icons.home_outlined, color: Color.fromARGB(255, 157, 98, 40),),
       title: const Text("Home"),
       selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
     SalomonBottomBarItem(
-      icon: const Icon(Icons.add),
+      icon: const Icon(Icons.add, color: Color.fromARGB(255, 157, 98, 40),),
       title: const Text("Tambah"),
       selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
     SalomonBottomBarItem(
-      icon: const Icon(Icons.category_outlined),
+      icon: const Icon(Icons.dashboard_customize, color: Color.fromARGB(255, 157, 98, 40),),
       title: const Text("Category"),
       selectedColor:  Color.fromARGB(255, 157, 98, 40),
     ),
@@ -57,68 +57,78 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/BlogId.png',
-              height: 40,
-            ),
-            const Text(
-              'Blog',
-              style: TextStyle(
-                fontFamily: 'Comic Relief',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+  appBar: _currentIndex == 2
+      ? null
+      : AppBar(
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/BlogId.png',
+                height: 40,
               ),
-            ),
-            Text(
-              'Id',
-              style: TextStyle(
-                fontFamily: 'Comic Relief',
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
+              const Text(
+                'Blog',
+                style: TextStyle(
+                  fontFamily: 'Comic Relief',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+              const Text(
+                'Id',
+                style: TextStyle(
+                  fontFamily: 'Comic Relief',
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
 
-      body: _currentIndex == 0
-        ? const HomePage()
-        : _currentIndex == 2
-            ? const CategoryPage()
-            : const SizedBox(),
+  body: _currentIndex == 0
+      ? const HomePage()
+      : _currentIndex == 2
+          ? CategoryPage(
+              onBack: () {
+                setState(() {
+                  _currentIndex = 0;
+                });
+              },
+            )
+          : const SizedBox(),
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 400,
-              child: SalomonBottomBar(
-                currentIndex: _currentIndex,
-                items: _items,
-                onTap: (index) {
-                  if (index == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreatePostPage(),
-                      ),
-                    );
-                    return;
-                  }
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-              ),
-            ),
-          ],
+  bottomNavigationBar: Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 400,
+          child: SalomonBottomBar(
+            currentIndex: _currentIndex,
+            items: _items,
+            onTap: (index) {
+              if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const CreatePostPage(),
+                  ),
+                );
+                return;
+              }
+
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
         ),
-      ),
-    );
+      ],
+    ),
+  ),
+);
   }
 }
