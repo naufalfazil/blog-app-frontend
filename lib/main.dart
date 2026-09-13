@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/create_post_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'pages/home_page.dart';
-import 'pages/add_post_page.dart';
 import 'pages/category_page.dart';
 
 void main() {
@@ -33,7 +33,6 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = const [
     HomePage(),
-    AddPostPage(),
     CategoryPage(),
   ];
 
@@ -85,7 +84,11 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
 
-      body: _pages[_currentIndex],
+      body: _currentIndex == 0
+        ? const HomePage()
+        : _currentIndex == 2
+            ? const CategoryPage()
+            : const SizedBox(),
 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -98,6 +101,15 @@ class _MainPageState extends State<MainPage> {
                 currentIndex: _currentIndex,
                 items: _items,
                 onTap: (index) {
+                  if (index == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreatePostPage(),
+                      ),
+                    );
+                    return;
+                  }
                   setState(() {
                     _currentIndex = index;
                   });
