@@ -204,14 +204,14 @@ class _EditPostPageState extends State<EditPostPage> {
                     ? Image.network(
                         _selectedImage!.path,
                         width: double.infinity,
-                        height: 240,
+                        height: 340,
                         fit: BoxFit.cover,
                       )
                     : oldImage.isNotEmpty
                         ? Image.network(
                             oldImage,
                             width: double.infinity,
-                            height: 240,
+                            height: 340,
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (context, error, stackTrace) {
